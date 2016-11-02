@@ -16,3 +16,8 @@
   6) ``cd ~/.vim/bundle/YouCompleteMe``
 
   7) ``./install.sh --clang-completeri``
+
+
+##Credits
+  
+  https://github.com/zatan
