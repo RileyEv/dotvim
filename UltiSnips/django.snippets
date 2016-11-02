@@ -1,0 +1,204 @@
+priority -50
+
+
+snippet import_deleteview "Import DeleteView" b
+from django.views.generic.edit import DeleteView
+endsnippet
+
+
+snippet import_formview "Import FormView" b
+from django.views.generic import FormView
+endsnippet
+
+
+snippet import_updateview "Import UpdateView" b
+from django.views.generic.edit import UpdateView
+endsnippet
+
+
+snippet import_listview "Import ListView" b
+from django.views.generic.list import ListView
+endsnippet
+
+
+snippet import_templateview "Import TemplateView" b
+from django.views.generic import TemplateView
+endsnippet
+
+
+snippet import_createview "Import CreateView" b
+from django.views.generic.edit import CreateView
+endsnippet
+
+
+snippet import_detailview "Import DetailView" b
+from django.views.generic.detail import DetailView
+endsnippet
+
+
+snippet import_python_2_unicode_compatible "Import python_2_unicode_compatible decorator" b
+from django.utils.encoding import python_2_unicode_compatible
+endsnippet
+
+
+snippet import_reverse_lazy "Import reverse_lazy" b
+from django.core.urlresolvers import reverse_lazy
+endsnippet
+
+
+snippet import_get_user_model "Import get_user_model" b
+from django.contrib.auth import get_user_model
+endsnippet
+
+
+snippet created_at "DateTimeFiled" b
+created_at = models.DateTimeField(auto_now_add=True)
+endsnippet
+
+
+snippet updated_at "DateTimeFiled" b
+updated_at = models.DateTimeField(auto_now=True)
+endsnippet
+
+
+snippet model "Model" b
+@python_2_unicode_compatible
+class ${1:MODELNAME}(models.Model):
+	${0}
+	class Meta:
+		verbose_name = "$1"
+		verbose_name_plural = "$1s"
+		ordering = ${2}
+
+	def __str__(self):
+		return super($1, self).__str__()
+endsnippet
+
+
+snippet form "Form" b
+class ${1:FORMNAME}(forms.Form):
+
+	${2:# TODO: Define form fields here}
+endsnippet
+
+
+snippet modelform "ModelForm" b
+class ${1:MODELNAME}Form(forms.ModelForm):
+
+	class Meta:
+		model = $1
+		fields = (${2})
+endsnippet
+
+
+snippet adminview "Model Admin View" b
+@admin.register(${1})
+class $1Admin(admin.ModelAdmin):
+	list_display = ('${3}',)
+	list_filter = ('${4}',)
+	readonly_fields = ('${6}',)
+	search_fields = ['${5}']
+	date_hierarchy = ${7}
+	fieldsets = (
+		(
+			'$1', {
+				'fields': (
+					${8}	
+				)
+			}
+		),
+		(
+			'Meta', {
+				'classes': ('collapse',), 
+				'fields': (
+				    ${9}
+				)
+			}
+		),
+	)
+endsnippet
+
+
+snippet createview "Generic Create View" b
+class $1CreateView(CreateView):
+	model = ${1:MODEL_NAME}
+	form_class = $1Form
+	template_name = "${2:TEMPLATE_NAME}"
+	success_url = reverse_lazy()
+
+	def get_context_data(self, **kwargs):
+		context = super($1CreateView, self).get_context_data(**kwargs)
+		return context
+
+	def form_valid(self, form):
+		messages.success(self.request, '$1 was added successfully.')
+		return super($1CreateView, self).form_valid(form)
+endsnippet
+
+
+snippet deleteview "Generic Delete View" b
+class $1DeleteView(DeleteView):
+	model = ${1:MODEL_NAME}
+	template_name = "${2:TEMPLATE_NAME}"
+	success_url = reverse_lazy(${3})
+
+	def get_context_data(self, **kwargs):
+		context = super($1DeleteView, self).get_context_data(**kwargs)
+		return context
+
+	def delete(self, request, *args, **kwargs):
+		response = super($1DeleteView, self).delete(request, *args, **kwargs)
+		messages.success(request, '$1 was deleted successfully.')
+		return response
+endsnippet
+
+snippet detailview "Generic Detail View" b
+class $1DetailView(DetailView):
+	model = ${1:MODEL_NAME}
+	template_name = "$1_detail.html"
+
+	def get_context_data(self, **kwargs):
+		context = super($1DetailView, self).get_context_data(**kwargs)
+		return context
+endsnippet
+
+snippet listview "Generic List View" b
+class $1ListView(ListView):
+	model = ${1:MODEL_NAME}
+	template_name = "${2:TEMPLATE_NAME}"
+
+	def get_context_data(self, **kwargs):
+		context = super($1ListView, self).get_context_data(**kwargs)
+		return context
+endsnippet
+
+
+snippet templateview "Generic Template View" b
+class ${1:MODEL_NAME}TemplateView(TemplateView):
+	template_name = "${2:TEMPLATE_NAME}"
+endsnippet
+
+
+snippet updateview "Generic Update View" b
+class $1UpdateView(UpdateView):
+	model = ${1:MODEL_NAME}
+	form_class = $1Form
+	template_name = "${2:TEMPLATE_NAME}"
+
+	def get_context_data(self, **kwargs):
+		context = super($1UpdateView, self).get_context_data(**kwargs)
+		return context
+endsnippet
+
+
+snippet management_command "Management Comman" b
+from django.core.management.base import BaseCommand, CommandError
+
+
+class Command(BaseCommand):
+	help = ''
+
+	def handle(self, *args, **options):
+		
+		self.stdout.write(self.style.MIGRATE_SUCCESS('Successfully done.'))
+endsnippet

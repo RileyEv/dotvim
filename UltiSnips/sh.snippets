@@ -1,0 +1,26 @@
+snippet virtualenv_postactive "VirtualEnv Postactive snippet" b
+function cdsrc {
+  cd $VIRTUAL_ENV/src/
+}
+
+function cdbin {
+  cd $VIRTUAL_ENV/bin/
+}
+
+
+export DJANGO_SETTINGS_MODULE='$1.settings.local'
+export DJANGO_DATABASE_NAME='$1'
+export PROJECT_DIR='/var/www/$1'
+export SPECTRUM=1
+endsnippet
+
+
+
+snippet tox_hook "Hook tox in git hooks" b
+#!/bin/sh
+
+if [ -f tox.ini ]
+	then
+		tox; 
+fi
+endsnippet
