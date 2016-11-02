@@ -1,5 +1,3 @@
-" Edvinas Jurevicius aka zatan "
-
 " Pathogen (helps managed packages on vim)
 execute pathogen#infect()
 
