@@ -11,25 +11,31 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " My Bundles
-Bundle 'mileszs/ack.vim'
-Bundle 'kien/ctrlp.vim'
-Bundle 'scrooloose/syntastic'
+Bundle 'vim-syntastic/syntastic'
 Bundle 'groenewege/vim-less'
 Bundle 'hynek/vim-python-pep8-indent'
-Bundle 'bling/vim-airline'
-Bundle 'majutsushi/tagbar'
+Bundle 'vim-airline/vim-airline'
 Bundle "pangloss/vim-javascript"
-Bundle "Valloric/YouCompleteMe"
-Bundle 'airblade/vim-rooter'
 Bundle 'othree/javascript-libraries-syntax.vim'
 Bundle 'tpope/vim-surround'
-Bundle 'chase/vim-ansible-yaml'
 Bundle 'terryma/vim-expand-region'
 Bundle 'tpope/vim-commentary'
-Bundle 'SirVer/ultisnips'
 Bundle 'chip/vim-fat-finger'
 Bundle 'tpope/vim-ragtag'
+Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-markdown'
+Bundle 'ehamberg/vim-cute-python'
+Bundle 'Twinside/vim-haskellConceal'
+Bundle 'scrooloose/nerdtree'
+Bundle 'Xuyuanp/nerdtree-git-plugin'
+Bundle 'airblade/vim-gitgutter'
 
+Plugin 'integralist/vim-mypy'
+Plugin 'JamshedVesuna/vim-markdown-preview'
+Plugin 'ap/vim-css-color'
+
+" Settings for Markdown
+let vim_markdown_preview_github=1
 
 " Map Leader
 let mapleader="\<Space>"
@@ -41,6 +47,7 @@ let mapleader="\<Space>"
 command W :w
 command Wq wq
 command WQ wq
+command Q q
 " Sudo write this
 cmap w!! w !sudo tee %
 
@@ -110,8 +117,7 @@ nnoremap <Leader>t :CtrlPTag<CR>
 nnoremap <Leader>a :Rack <c-r>=expand("<cword>")<cr>
 
 "Map sort function to a key
-vnoremap <Leader>s :sort<CR>
-" Moving between windows
+
 nmap <silent> <C-Up> :wincmd k<CR>
 nmap <silent> <C-Down> :wincmd j<CR>
 nmap <silent> <C-Left> :wincmd h<CR>
@@ -157,6 +163,8 @@ nmap <leader>c :SyntasticCheck<Cr>
 let g:syntastic_python_checkers = ['flake8']
 let g:syntastic_python_flake8_args="--ignore=E501,F405"
 
+let g:syntastic_haskell_checkers = []
+
 
 """"""""
 " JEDI "
@@ -190,7 +198,14 @@ filetype plugin indent on   " enable loading indent file for filetype
 set autoindent              	      " always set autoindenting on
 set autoread                          " Automatically reload files changed on disk.
 set backspace=2             	      " Allow backspacing over autoindent, EOL, and BOL
-set clipboard=unnamedplus     	      " Settings clipboard to be able copy/paste
+
+if system('uname -s') == "Darwin\n"
+    set clipboard=unnamed "OSX
+else
+    set clipboard=unnamedplus "Linux
+endif
+
+
 set completeopt-=preview              " Remove preview window
 set confirm                 	      " Y-N-C prompt if closing with unsaved changes.
 set cursorline              	      " have a line indicate the cursor location
@@ -199,7 +214,7 @@ set encoding=utf-8                    " The encoding displayed.
 set expandtab               	      " Use spaces, not tabs, for autoindent/tab key.
 set ffs=unix,dos,mac        	      " Try recognizing dos, unix, and mac line endings.
 set fileencoding=utf-8                " The encoding written to file.
-set foldenable                        " Enable Fold 
+set foldenable                        " Enable Fold
 set foldcolumn=0            	      " show the fold column
 set foldlevel=99            	      " don't fold by default
 set foldlevelstart=10            	  " don't fold by default
@@ -257,34 +272,18 @@ cmap <expr> <Tab> getcmdtype() == "/" ? "<CR>/<C-r>/" : "<C-z>"
 
 " Different work configs
 
-" if hostname() == "edvinas-Z97-HD3"
-if hostname() == "embor"
-    autocmd FileType xhtml,xml,css,less,javascript setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4
-    au FileType html,htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType python setlocal expandtab smarttab shiftwidth=4 tabstop=4 textwidth=99 softtabstop=4 colorcolumn=100
-    au FileType python set ft=python.django 
+autocmd FileType xhtml,xml,css,less,javascript,scss setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+au FileType html,htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
+au FileType python set ft=python.django
 
-    "Remove trailing whitespaces only after some text."
-    autocmd BufWritePre *.css :%s/\S\zs\s\+$//e
-    autocmd BufWritePre *.less :%s/\S\zs\s\+$//e
-    autocmd BufWritePre *.scss :%s/\S\zs\s\+$//e
-    autocmd BufWritePre *.py :%s/\S\zs\s\+$//e
-    autocmd BufWritePre *.html :%s/\S\zs\s\+$//e
-    autocmd BufWritePre *.js :%s/\S\zs\s\+$//e
-else
-    autocmd FileType xhtml,xml,css,less,javascript,scss setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType html,htmldjango setlocal shiftwidth=2 tabstop=2 softtabstop=2
-    au FileType python set ft=python.django 
-
-    "Remove trailing whitespaces."
-    autocmd BufWritePre *.css :%s/\s\+$//e
-    autocmd BufWritePre *.less :%s/\s\+$//e
-    autocmd BufWritePre *.scss :%s/\S\zs\s\+$//e
-    autocmd BufWritePre *.py :%s/\s\+$//e
-    autocmd BufWritePre *.html :%s/\s\+$//e
-    autocmd BufWritePre *.js :%s/\s\+$//e
-    autocmd BufWritePre *.py :%s/\s\+$//e
-endif
+"Remove trailing whitespaces."
+autocmd BufWritePre *.css :%s/\s\+$//e
+autocmd BufWritePre *.less :%s/\s\+$//e
+autocmd BufWritePre *.scss :%s/\S\zs\s\+$//e
+autocmd BufWritePre *.py :%s/\s\+$//e
+autocmd BufWritePre *.html :%s/\s\+$//e
+autocmd BufWritePre *.js :%s/\s\+$//e
+autocmd BufWritePre *.py :%s/\s\+$//e
 
 """"""""""
 " PYTHON "
@@ -321,7 +320,7 @@ colorscheme molokai
 autocmd BufWritePre *.py if search('coding: utf-8', 'n') == 0 | call append(0, '# -*- coding: utf-8 -*-' ) | endif
 
 " Adds unicode literals"
-autocmd BufWritePre *.py if search('from __future__ import unicode_literals', 'n') == 0 | call append(1, 'from __future__ import unicode_literals') | endif
+" autocmd BufWritePre *.py if search('from __future__ import unicode_literals', 'n') == 0 | call append(1, 'from __future__ import unicode_literals') | endif
 
 let g:ycm_collect_identifiers_from_tags_files = 0
 " YouCompleteMe got to definition
@@ -384,12 +383,29 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_path_to_python_interpreter="/usr/bin/python"
 
 function! Rack (args)
-let l:gitDir = system("git rev-parse --show-toplevel")  
+let l:gitDir = system("git rev-parse --show-toplevel")
 if l:gitDir =~ "Not a git repository"
-    execute 'Ack ' . a:args      
-    return  
-endif  
+    execute 'Ack ' . a:args
+    return
+endif
 execute 'Ack ' . a:args  .' ' . l:gitDir
 endfunction
-command! -bang -nargs=* -complete=file Rack call Rack(<q-args>) 
+command! -bang -nargs=* -complete=file Rack call Rack(<q-args>)
+
+
+" air-line
+"
+
+let g:airline_powerline_fonts=1
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#branch#enabled = 1
+let g:airline_skip_empty_sections = 1
+
+" Markdown
+let g:markdown_fenced_languages = ['lhs=lhaskell']
+
+" nerdtree
+
+map <C-n> :NERDTreeToggle<CR>
+
 
