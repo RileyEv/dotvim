@@ -13,9 +13,6 @@
   
   5) ``:BundleInstall`` inside vim
 
-  6) ``cd ~/.vim/bundle/YouCompleteMe``
-
-  7) ``./install.sh --clang-completeri``
 
 
 ##Credits
