@@ -29,10 +29,11 @@ Bundle 'Twinside/vim-haskellConceal'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Xuyuanp/nerdtree-git-plugin'
 Bundle 'airblade/vim-gitgutter'
+Bundle 'tmhedberg/SimpylFold'
 
-Plugin 'integralist/vim-mypy'
 Plugin 'JamshedVesuna/vim-markdown-preview'
 Plugin 'ap/vim-css-color'
+Plugin 'fatih/vim-go'
 
 " Settings for Markdown
 let vim_markdown_preview_github=1
@@ -160,11 +161,16 @@ let g:syntastic_scss_checkers = ['scss_lint']
 nmap <leader>c :SyntasticCheck<Cr>
 
 " Ignore PEP8 rules
-let g:syntastic_python_checkers = ['flake8']
-let g:syntastic_python_flake8_args="--ignore=E501,F405"
+if $HOST != "bc4login4.acrc.bris.priv"
+  let g:syntastic_python_checkers = ['flake8']
+  let g:syntastic_python_flake8_args="--ignore=E501,F405"
+endif
 
 let g:syntastic_haskell_checkers = []
 
+let g:syntastic_go_checkers = ['go', '/Users/rileyevans/go/bin/golint']
+
+let g:syntastic_cpp_checkers = []
 
 """"""""
 " JEDI "
@@ -215,10 +221,10 @@ set expandtab               	      " Use spaces, not tabs, for autoindent/tab ke
 set ffs=unix,dos,mac        	      " Try recognizing dos, unix, and mac line endings.
 set fileencoding=utf-8                " The encoding written to file.
 set foldenable                        " Enable Fold
-set foldcolumn=0            	      " show the fold column
+set foldcolumn=2            	      " show the fold column
 set foldlevel=99            	      " don't fold by default
 set foldlevelstart=10            	  " don't fold by default
-set foldmethod=indent       	      " allow us to fold on indents
+set foldmethod=syntax       	      " allow us to fold on indents
 set hidden                            " Hides buffers instead of closing them
 set hlsearch                	      " Highlight searches by default.
 set ignorecase              	      " Default to using case insensitive searches,
@@ -317,7 +323,7 @@ augroup END
 colorscheme molokai
 
 " Adds coding utf-8 coding "
-autocmd BufWritePre *.py if search('coding: utf-8', 'n') == 0 | call append(0, '# -*- coding: utf-8 -*-' ) | endif
+" autocmd BufWritePre *.py if search('coding: utf-8', 'n') == 0 | call append(0, '# -*- coding: utf-8 -*-' ) | endif
 
 " Adds unicode literals"
 " autocmd BufWritePre *.py if search('from __future__ import unicode_literals', 'n') == 0 | call append(1, 'from __future__ import unicode_literals') | endif
@@ -402,10 +408,43 @@ let g:airline#extensions#branch#enabled = 1
 let g:airline_skip_empty_sections = 1
 
 " Markdown
-let g:markdown_fenced_languages = ['lhs=lhaskell']
+let g:markdown_fenced_languages = ['lhs=lhaskell', 'py=python', 'sh=sh', 'sql=sql', 'go=go']
 
 " nerdtree
 
-map <C-n> :NERDTreeToggle<CR>
+"map <C-n> :NERDTreeToggle<CR>
+
+" netrw
+
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
+" augroup ProjectDrawer
+"   autocmd!
+"   autocmd VimEnter * :Vexplore
+" augroup END
 
 
+" Toggle Vexplore with Ctrl-E
+function! ToggleVExplorer()
+  if exists("t:expl_buf_num")
+      let expl_win_num = bufwinnr(t:expl_buf_num)
+      if expl_win_num != -1
+          let cur_win_nr = winnr()
+          exec expl_win_num . 'wincmd w'
+          close
+          exec cur_win_nr . 'wincmd w'
+          unlet t:expl_buf_num
+      else
+          unlet t:expl_buf_num
+      endif
+  else
+      exec '1wincmd w'
+      Vexplore
+      let t:expl_buf_num = bufnr("%")
+  endif
+endfunction
+
+map <silent> <C-n> :call ToggleVExplorer()<CR>
