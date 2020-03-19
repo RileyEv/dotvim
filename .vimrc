@@ -30,6 +30,8 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'Xuyuanp/nerdtree-git-plugin'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'tmhedberg/SimpylFold'
+Bundle 'petRUShka/vim-opencl'
+Bundle 'godlygeek/tabular'
 
 Plugin 'JamshedVesuna/vim-markdown-preview'
 Plugin 'ap/vim-css-color'
