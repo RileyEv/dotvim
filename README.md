@@ -1,7 +1,7 @@
-#VIM
+# VIM
 
 
-##Instalation:
+## Instalation:
 
   1) ``git clone https://github.com/RileyEv/dotvim ~/.vim``
   
@@ -15,6 +15,6 @@
 
 
 
-##Credits
+## Credits
   
   https://github.com/zatan
